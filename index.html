@@ -137,18 +137,12 @@ button {
 <div class="header site-link">
   <a href="https://lifeprediction.net">
     <img src="https://assets.nicepagecdn.com/0b5dbf35/6598838/images/Untitled111.png" alt="Logo">
-    lifeprediction.net
+    LIFE PREDICTION
   </a>
 </div>
 
 <div class="tool">
   <h1>YEAR ASTROLOGY FORECAST</h1>
-
-  <label>GENDER</label>
-  <select id="gender">
-    <option value="male">Male Sun Sign</option>
-    <option value="female">Female Moon Sign</option>
-  </select>
 
   <label>SELECT YEAR</label>
   <select id="year">
@@ -157,6 +151,12 @@ button {
         document.write('<option value="'+y+'"'+(y===2026?' selected':'')+'>'+y+'</option>');
       }
     </script>
+  </select>
+
+  <label>GENDER</label>
+  <select id="gender">
+    <option value="male">Male Sun Sign</option>
+    <option value="female">Female Moon Sign</option>
   </select>
 
   <label>SIGN ELEMENT</label>
@@ -187,7 +187,6 @@ function reduceToSingleDigit(num) {
 function calculateForecast() {
   var year = parseInt(document.getElementById("year").value);
   
-  // Reduce year digits to single number
   var reducedYear = reduceToSingleDigit(
     year.toString().split('').reduce((a, b) => a + Number(b), 0)
   );
