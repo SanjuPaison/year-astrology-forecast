@@ -10,7 +10,6 @@
 <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
 
 <style>
-
 input,
 select,
 button {
@@ -21,9 +20,8 @@ button {
   border-radius: 6px;
   border: none;
 }
-  
+
 html, body {
-  height: 100%;
   margin: 0;
   background-color: #AB4A4F;
   font-family: 'Open Sans', sans-serif;
@@ -33,26 +31,17 @@ html, body {
 
 body {
   display: flex;
-  justify-content: flex-start;
-  align-items: center;
   flex-direction: column;
+  align-items: center;
   padding: 20px;
   box-sizing: border-box;
-  overflow-y: auto;
 }
 
 /* Header */
 .header {
   width: 100%;
   max-width: 420px;
-  display: flex;
-  align-items: center;
   margin-bottom: 24px;
-}
-
-.header img {
-  height: 40px;
-  display: block;
 }
 
 .header a {
@@ -62,7 +51,10 @@ body {
   color: #ffffff;
   font-weight: 600;
   text-decoration: none;
-  font-size: 17px;
+}
+
+.header img {
+  height: 40px;
 }
 
 /* Tool */
@@ -74,13 +66,11 @@ body {
   border-radius: 14px;
   background-color: #AB4A4F;
   color: #ffffff;
-  box-sizing: border-box;
 }
 
 h1 {
   font-size: 20px;
   margin-bottom: 20px;
-  letter-spacing: 1.5px;
   text-align: center;
 }
 
@@ -90,25 +80,17 @@ label {
   font-weight: 600;
 }
 
-select, button {
-  width: 100%;
-  padding: 10px;
-  margin-bottom: 16px;
-  font-size: 15px;
-  font-family: 'Open Sans', sans-serif;
-}
-
 button {
   background-color: #ffffff;
   color: #AB4A4F;
-  border: none;
-  cursor: pointer;
   font-weight: 600;
+  cursor: pointer;
 }
 
-/* Forecast */
+/* Result */
 #result {
   margin-top: 16px;
+  font-size: 13px;
   text-align: justify;
 }
 
@@ -120,10 +102,9 @@ button {
 }
 
 .forecast-text {
-  font-size: 13px; /* 1 point lower */
+  font-size: 13px;
 }
 
-/* Links */
 .site-link {
   margin-top: 24px;
   font-weight: 600;
@@ -134,19 +115,12 @@ button {
   color: #ffffff;
   text-decoration: none;
 }
-
-/* Mobile */
-@media (max-width: 480px) {
-  .header img {
-    height: 30px;
-  }
-}
 </style>
 </head>
 
 <body>
 
-<div class="header site-link">
+<div class="header">
   <a href="https://lifeprediction.net">
     <img src="https://assets.nicepagecdn.com/0b5dbf35/6598838/images/Untitled111.png" alt="Logo">
     LIFE PREDICTION
@@ -154,41 +128,68 @@ button {
 </div>
 
 <div class="tool">
-  <h1>YEAR ASTROLOGY FORECAST</h1>
+<h1>YEAR ASTROLOGY FORECAST</h1>
 
-  <label>SELECT YEAR</label>
-  <select id="year">
-    <script>
-      for (let y = 2017; y <= 2032; y++) {
-        document.write('<option value="'+y+'"'+(y===2026?' selected':'')+'>'+y+'</option>');
-      }
-    </script>
-  </select>
+<label>SELECT YEAR</label>
+<select id="year">
+  <script>
+    for (let y = 2017; y <= 2032; y++) {
+      document.write('<option value="'+y+'"'+(y===2026?' selected':'')+'>'+y+'</option>');
+    }
+  </script>
+</select>
 
-  <label>GENDER</label>
-  <select id="gender">
-    <option value="male">Male Sun Sign</option>
-    <option value="female">Female Moon Sign</option>
-  </select>
+<label>GENDER</label>
+<select id="gender">
+  <option value="male">Male Sun Sign</option>
+  <option value="female">Female Moon Sign</option>
+</select>
 
-  <label>SIGN ELEMENT</label>
-  <select id="sign">
-    <option value="fire">Fire Aries Leo Sagittarius</option>
-    <option value="earth">Earth Taurus Virgo Capricorn</option>
-    <option value="air">Air Gemini Libra Aquarius</option>
-    <option value="water">Water Cancer Scorpio Pisces</option>
-  </select>
+<label>SIGN ELEMENT</label>
+<select id="sign">
+  <option value="fire">Fire Aries Leo Sagittarius</option>
+  <option value="earth">Earth Taurus Virgo Capricorn</option>
+  <option value="air">Air Gemini Libra Aquarius</option>
+  <option value="water">Water Cancer Scorpio Pisces</option>
+</select>
 
-  <button onclick="calculateForecast()">CHECK YEAR</button>
+<!-- CAPTCHA -->
+<label id="captchaLabel"></label>
+<input type="text" id="captchaAnswer" placeholder="Your answer">
 
-  <div id="result"></div>
+<!-- Honeypot -->
+<input type="text" id="website" style="display:none">
 
-  <div class="site-link">
-    <a href="https://lifeprediction.net">lifeprediction.net</a>
-  </div>
+<button id="submitBtn" onclick="calculateForecast()">CHECK YEAR</button>
+
+<div id="result"></div>
+
+<div class="site-link">
+  <a href="https://lifeprediction.net">lifeprediction.net</a>
+</div>
 </div>
 
 <script>
+let captchaCorrect = "";
+let pageLoadTime = Date.now();
+let hasSubmitted = false;
+
+/* CAPTCHA */
+function generateCaptcha() {
+  const questions = [
+    { q: "How many zodiac signs are there?", a: "12" },
+    { q: "What is 6 + 5?", a: "11" },
+    { q: "What is double of 8?", a: "16" },
+    { q: "What is 10 − 4?", a: "6" }
+  ];
+  const pick = questions[Math.floor(Math.random() * questions.length)];
+  captchaCorrect = pick.a;
+  document.getElementById("captchaLabel").innerText =
+    "ANTI-SPAM: " + pick.q;
+}
+generateCaptcha();
+
+/* NUMEROLOGY */
 function reduceToSingleDigit(num) {
   while (num > 9) {
     num = num.toString().split('').reduce((a, b) => a + Number(b), 0);
@@ -197,14 +198,35 @@ function reduceToSingleDigit(num) {
 }
 
 function calculateForecast() {
-  var year = parseInt(document.getElementById("year").value);
-  
-  var reducedYear = reduceToSingleDigit(
+  const result = document.getElementById("result");
+  const btn = document.getElementById("submitBtn");
+
+  if (hasSubmitted) {
+    result.innerHTML = "You have already checked this year’s forecast.";
+    return;
+  }
+
+  if (document.getElementById("website").value !== "") return;
+
+  if (Date.now() - pageLoadTime < 3000) {
+    result.innerHTML = "Please take a moment before submitting.";
+    return;
+  }
+
+  if (document.getElementById("captchaAnswer").value.trim() !== captchaCorrect) {
+    result.innerHTML = "Incorrect anti-spam answer. Try again.";
+    generateCaptcha();
+    return;
+  }
+
+  const year = parseInt(document.getElementById("year").value);
+
+  const reducedYear = reduceToSingleDigit(
     year.toString().split('').reduce((a, b) => a + Number(b), 0)
   );
 
-  var sign = document.getElementById("sign").value;
-  var forecast = "NORMAL";
+  const sign = document.getElementById("sign").value;
+  let forecast = "NORMAL";
 
   if ([1,5,9].includes(reducedYear)) {
     if (sign === "fire") forecast = "GOOD";
@@ -223,24 +245,21 @@ function calculateForecast() {
     if (sign === "earth") forecast = "BAD";
   }
 
-  var text = {
-    GOOD: `This year supports steady career and financial progress. It’s a strong period to increase income, finalize agreements, or move forward with projects that have clear value. Strategic thinking and measured decisions will produce better results than rushing or improvising.<br><br>
-    Discipline and focus are especially effective. Organizing work, handling responsibilities, and following through on plans can turn effort into visible gains and strengthen your professional standing.<br><br>
-    Opportunities for advancement are present if you act with preparation and confidence. Meetings, contracts, or public-facing decisions are favored when approached thoughtfully. Think of the year as a well-run machine: consistent input produces reliable output, leading to recognition and tangible rewards.`,
-    
-    NORMAL: `This year carries strong energy for action and creativity, but how it unfolds can vary. One expression favors listening, collaboration, and exchange of ideas. Conversations, brainstorming, and shared planning can produce meaningful breakthroughs when you stay receptive and allow others to contribute.<br><br>
-    The same intensity can also manifest as challenges if misdirected. Overexertion, haste, or reckless behavior may lead to strain or conflict. These are alternate expressions of the year’s momentum.<br><br>
-    Progress comes from choosing restraint and dialogue over impulse and force. When energy is channeled into cooperation, it builds insight and forward movement; when pushed without control, it increases risk.`,
-    
-    BAD: `This year favors caution, privacy, and consolidation rather than outward progress. Personal matters, home concerns, and emotional well-being take priority, while attempts to push forward publicly may face resistance or delays.<br><br>
-    Financial pressure, power struggles, or sudden disruptions may arise, making it harder to maintain momentum. Plans can stall, resources may feel strained, and outcomes are less predictable.<br><br>
-    The most effective approach is quiet maintenance and internal work. Manage obligations, protect resources, and address unresolved issues rather than starting something new. Think of the year like sheltering from a storm: staying steady and reinforcing what you have is safer than moving forward in unstable conditions.`
+  const text = {
+    GOOD: `This year supports steady career and financial progress. It’s a strong period to increase income, finalize agreements, or move forward with projects that have clear value.`,
+    NORMAL: `This year carries strong energy for action and creativity, which can express through collaboration or physical effort depending on restraint.`,
+    BAD: `This year favors caution, privacy, and consolidation rather than outward progress.`
   };
 
-  document.getElementById("result").innerHTML =
-    "YEAR NUMBER " + reducedYear +
+  result.innerHTML =
+    "YEAR: " + year +
     "<br><br><div class='forecast-heading'>" + forecast + "</div>" +
-    "<div class='forecast-text'>" + text[forecast] + ".</div>";
+    "<div class='forecast-text'>" + text[forecast] + "</div>";
+
+  hasSubmitted = true;
+  btn.disabled = true;
+  btn.style.opacity = "0.6";
+  btn.style.cursor = "not-allowed";
 }
 </script>
 
