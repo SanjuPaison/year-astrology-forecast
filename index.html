@@ -225,7 +225,7 @@ function calculateForecast() {
   );
 
   const sign = document.getElementById("sign").value;
-  let forecast = "NORMAL";
+  let forecast = "DANGER";
 
   if ([1,5,9].includes(reducedYear)) {
     if (sign === "fire") forecast = "GOOD";
@@ -246,8 +246,8 @@ function calculateForecast() {
 
   const text = {
     GOOD: `This year supports steady career and financial progress. It’s a strong period to increase income, finalize agreements, or move forward with projects that have clear value.`,
-    NORMAL: `This year carries strong energy for action and creativity, which can express through collaboration or physical effort depending on restraint.`,
-    BAD: `This year favors caution, privacy, and consolidation rather than outward progress.`
+    DANGER: `This year carries strong energy for action, creativity, communication, and ideas, which can express through collaboration or confrontation depending on caution and restraint.`,
+    BAD: `This year favors caution, privacy, and consolidation rather than outward progress. Be wary of deception and manage emotional turmoil.`
   };
 
   result.innerHTML =
